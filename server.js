@@ -78,15 +78,36 @@ app.put('/markUnComplete', (request, response) => {
 
 })
 
-app.delete('/deleteItem', (request, response) => {
-    db.collection('todos').deleteOne({thing: request.body.itemFromJS})
-    .then(result => {
-        console.log('Todo Deleted')
-        response.json('Todo Deleted')
-    })
-    .catch(error => console.error(error))
+// original delete request 
+// app.delete('/deleteItem', (request, response) => {
+//     db.collection('todos').deleteOne({thing: request.body.itemFromJS})
+//     .then(result => {
+//         console.log('Todo Deleted')
+//         response.json('Todo Deleted')
+//     })
+//     .catch(error => console.error(error))
 
-})
+// })
+
+// refactored code including error handling and async/await
+app.delete('/deleteItem', async (request, response) => {
+    try {
+        await deleteItem(request.body.itemFromJS);
+        console.log('Todo Deleted');
+        response.json('Todo Deleted');
+    } catch (error) {
+        console.error(error);
+        response.status(500).send(error);
+    }
+});
+
+async function deleteItem(item) {
+    const deletionResult = await db.collection('todos').deleteOne({thing: item});
+    if (deletionResult.deletedCount === 0) {
+        throw new Error('No todo with this item found to delete');
+    }
+}
+
 
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
