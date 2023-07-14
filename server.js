@@ -86,7 +86,6 @@ app.put('/markUnComplete', (request, response) => {
 //         response.json('Todo Deleted')
 //     })
 //     .catch(error => console.error(error))
-
 // })
 
 // refactored code including error handling and async/await
@@ -108,7 +107,7 @@ async function deleteItem(item) {
     }
 }
 
-
+// listen request and port variable
 app.listen(process.env.PORT || PORT, ()=>{
     console.log(`Server running on port ${PORT}`)
 })
