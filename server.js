@@ -100,6 +100,7 @@ app.delete('/deleteItem', async (request, response) => {
     }
 });
 
+// async function to delete item and throw error message if needed
 async function deleteItem(item) {
     const deletionResult = await db.collection('todos').deleteOne({thing: item});
     if (deletionResult.deletedCount === 0) {
