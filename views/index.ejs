@@ -18,6 +18,9 @@
     <title>Document</title>
 </head>
 <body>
+    //This ejs template is looping through the Items array we created which is our documents in our TODO collection in the DB
+    //It will then display in a span items[i].thing each of our documents in the items array (if it is not completed)
+    //If the item is true we want the span we created to have the completed class, otherwise it will not have that class.
     <h1>Todo List: </h1>
     <ul class="todoItems">
     <% for(let i=0; i < items.length; i++) {%>
