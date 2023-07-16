@@ -20,29 +20,34 @@ app.use(express.static('public'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-// Original Code for Main GET request
-// Renamed the documents inside the array (TODOS) to items, so in EJS template if you see items it is your todo documents
-app.get('/',async (request, response)=>{
-    const todoItems = await db.collection('todos').find().toArray()
-    const itemsLeft = await db.collection('todos').countDocuments({completed: false})
-    response.render('index.ejs', { items: todoItems, left: itemsLeft })
-    // db.collection('todos').find().toArray()
-    // .then(data => {
-    //     db.collection('todos').countDocuments({completed: false})
-    //     .then(itemsLeft => {
-    //         response.render('index.ejs', { items: data, left: itemsLeft })
-    //     })
-    // })
-    // .catch(error => console.error(error))
-})
-
-
-// Refactored GET request to main
-// app.get('/', async (request, response)=>{
+//// Original Code for Main GET request
+//// Renamed the documents inside the array (TODOS) to items, so in EJS template if you see items it is your todo documents
+// app.get('/',async (request, response)=>{
 //     const todoItems = await db.collection('todos').find().toArray()
 //     const itemsLeft = await db.collection('todos').countDocuments({completed: false})
-//     response.render('index.ejs', {items: todoItems, left: itemsLeft})
+//     response.render('index.ejs', { items: todoItems, left: itemsLeft })
+//     // db.collection('todos').find().toArray()
+//     // .then(data => {
+//     //     db.collection('todos').countDocuments({completed: false})
+//     //     .then(itemsLeft => {
+//     //         response.render('index.ejs', { items: data, left: itemsLeft })
+//     //     })
+//     // })
+//     // .catch(error => console.error(error))
 // })
+
+
+//Refactored GET request to main with included error handling if a server error occurs
+app.get('/', async (request, response)=>{
+    try {
+        const todoItems = await db.collection('todos').find().toArray();
+        const itemsLeft = await db.collection('todos').countDocuments({completed: false});
+        response.render('index.ejs', {items: todoItems, left: itemsLeft});
+    } catch (error) {
+        console.error(error);
+        response.status(500).send('500 HTTP Status code. A server error has ocurred.');
+    }
+});
 
 app.post('/addTodo', (request, response) => {
     db.collection('todos').insertOne({thing: request.body.todoItem, completed: false})
