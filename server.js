@@ -21,6 +21,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 // Original Code for Main GET request
+// Renamed the documents inside the array (TODOS) to items, so in EJS template if you see items it is your todo documents
 app.get('/',async (request, response)=>{
     const todoItems = await db.collection('todos').find().toArray()
     const itemsLeft = await db.collection('todos').countDocuments({completed: false})
