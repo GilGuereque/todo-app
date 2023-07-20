@@ -50,6 +50,16 @@ app.get('/', async (request, response)=>{
 });
 
 // POST request
+// app.post('/addTodo', (request, response) => {
+//     db.collection('todos').insertOne({thing: request.body.todoItem, completed: false})
+//     .then(result => {
+//         console.log('Todo Added')
+//         response.redirect('/')
+//     })
+//     .catch(error => console.error(error))
+// })
+
+// Refactored POST request
 app.post('/addTodo', (request, response) => {
     db.collection('todos').insertOne({thing: request.body.todoItem, completed: false})
     .then(result => {
@@ -59,6 +69,7 @@ app.post('/addTodo', (request, response) => {
     .catch(error => console.error(error))
 })
 
+// PUT request (Update)
 app.put('/markComplete', (request, response) => {
     db.collection('todos').updateOne({thing: request.body.itemFromJS},{
         $set: {
